@@ -79,20 +79,59 @@
 
             console.log("---------------------")
             console.log("PART 1...")
+            const data = parsedResponse.data;
+    const metadata = parsedResponse.meta;
 
+    // A) Display dataset name
+    console.log("Dataset Name:", metadata.name);
 
+    // B) Display time frequency
+    console.log("Time Frequency:", metadata.interval);
 
+    // C) Display number of datapoints
+    console.log("Number of Datapoints:", data.length);
 
+    // D) Display time range
+    const sortedData = data.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    const earliestDate = sortedData[0].date;
+    const latestDate = sortedData[sortedData.length - 1].date;
+    console.log("Time Range:", earliestDate, "to", latestDate);
 
+    // E) Display average, min, max over all data
+    const allValues = data.map(d => parseFloat(d.value));
+    const avgAll = allValues.reduce((a, b) => a + b, 0) / allValues.length;
+    const minAll = Math.min(...allValues);
+    const maxAll = Math.max(...allValues);
+    console.log("All Data - Average:", avgAll.toFixed(2), "Min:", minAll, "Max:", maxAll);
 
+    // F) Display average, min, max over past 12 months (first 12 datapoints)
+    const recentValues = data.slice(0, 12).map(d => parseFloat(d.value));
+    const avgRecent = recentValues.reduce((a, b) => a + b, 0) / recentValues.length;
+    const minRecent = Math.min(...recentValues);
+    const maxRecent = Math.max(...recentValues);
+    console.log("Past 12 Months - Average:", avgRecent.toFixed(2), "Min:", minRecent, "Max:", maxRecent);
 
             console.log("---------------------")
             console.log("PART 2...")
+// Create line chart
+const dates = data.map(d => d.date).reverse(); // reverse to get chronological order
+    const values = data.map(d => parseFloat(d.value)).reverse();
 
+    const trace = {
+        x: dates,
+        y: values,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Fed Funds Rate'
+    };
 
+    const layout = {
+        title: 'Federal Funds Rate Over Time',
+        xaxis: { title: 'Date' },
+        yaxis: { title: 'Interest Rate (%)' }
+    };
 
-
-
+    Plotly.newPlot('dataviz-container', [trace], layout);
 
         }).catch(function(error) {
             console.error("ERROR:", error)

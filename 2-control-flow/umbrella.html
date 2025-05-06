@@ -70,24 +70,53 @@
 
         console.log("---------------------")
         console.log("PART 1...")
+// Part 1 variables
+let isRaining = true;  // You can change this to false for testing
+    let ownsUmbrella = false;  // You can change this to true for testing
 
+    console.log("isRaining:", isRaining);
+    console.log("ownsUmbrella:", ownsUmbrella);
 
-
-
+    // Part 1 logic
+    if (!isRaining) {
+        console.log("Skies are clear");
+    } else {
+        if (ownsUmbrella) {
+            console.log("Bring your umbrella");
+        } else {
+            console.log("Buy an umbrella");
+        }
+    }
 
         console.log("---------------------")
         console.log("PART 2...")
+// Part 2 function
+function advise(isRaining, ownsUmbrella) {
+        if (!isRaining) {
+            return "Skies are clear";
+        } else {
+            return ownsUmbrella ? "Bring your umbrella" : "Buy an umbrella";
+        }
+    }
 
-
-
+    // Part 2 tests
+    console.log(advise(true, true));   // raining, owns umbrella
+    console.log(advise(true, false));  // raining, no umbrella
+    console.log(advise(false, true));  // not raining, owns umbrella
+    console.log(advise(false, false)); // not raining, no umbrella
 
 
         console.log("---------------------")
         console.log("PART 3...")
+// Part 3 button handler
+document.getElementById("advise").addEventListener("click", function() {
+        let isRainingChecked = document.getElementById("switch-raining").checked;
+        let ownsUmbrellaChecked = document.getElementById("switch-umbrella").checked;
 
+        let message = advise(isRainingChecked, ownsUmbrellaChecked);
 
-
-
+        document.getElementById("display-message").textContent = message;
+    });
 
     </script>
 </body>

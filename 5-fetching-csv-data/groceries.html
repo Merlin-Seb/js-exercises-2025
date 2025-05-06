@@ -83,26 +83,56 @@
             console.log("---------------------")
             console.log("PART 1...")
 
+ // A. Number of products
+ console.log(`Number of products: ${products.length}`)
 
+// B. Name and price of each product
+products.forEach(product => {
+    let price = parseFloat(product.price)
+    console.log(`${product.name}: ${formatUSD(price)}`)
+})
 
+// C. Unique list of departments
+let departments = []
+products.forEach(product => {
+    if (!departments.includes(product.department)) {
+        departments.push(product.department)
+    }
+})
+console.log(`Number of unique departments: ${departments.length}`)
 
+// D. Department names in uppercase
+departments.forEach(dept => {
+    console.log(dept.toUpperCase())
+})
 
+// E. Filter products by department "beverages"
+let beverages = products.filter(product => product.department === "beverages")
+console.log(`Number of beverages: ${beverages.length}`)
+
+// F. Average price of beverages
+let totalBeveragePrice = beverages.reduce((sum, item) => sum + parseFloat(item.price), 0)
+let avgBeveragePrice = totalBeveragePrice / beverages.length
+console.log(`Average beverage price: ${formatUSD(avgBeveragePrice)}`)
 
             console.log("---------------------")
             console.log("PART 2...")
 
+ // A. Sort products by name
+ let sortedProducts = products.slice().sort((a, b) => a.name.localeCompare(b.name))
 
+// B. Display name and price in the UL
+let ul = document.getElementById("display-groceries")
+sortedProducts.forEach(product => {
+    let li = document.createElement("li")
+    let price = parseFloat(product.price)
+    li.textContent = `${product.name}: ${formatUSD(price)}`
+    ul.appendChild(li)
+})
 
-
-
-
-
-
-
-
-            }).catch(function(error) {
-                console.error("ERROR:", error)
-        })
+}).catch(function(error) {
+console.error("ERROR:", error)
+})
 
     </script>
 </body>

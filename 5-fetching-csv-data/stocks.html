@@ -94,17 +94,37 @@
             console.log("---------------------")
             console.log("PART 1...")
 
+// Convert adjusted_close to number
+data.forEach(d => {
+        d.adjusted_close = parseFloat(d.adjusted_close)
+    })
 
+    // Sort data by date ascending
+    data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
 
+    // A: Number of days
+    console.log("Number of days:", data.length)
 
+    // B: Earliest day
+    let earliest = data[0]
+    console.log("Earliest:", earliest.timestamp, formatUSD(earliest.adjusted_close))
+
+    // C: Latest day
+    let latest = data[data.length - 1]
+    console.log("Latest:", latest.timestamp, formatUSD(latest.adjusted_close))
+
+    // D: Percent change
+    let percentChange = (latest.adjusted_close - earliest.adjusted_close) / earliest.adjusted_close
+    console.log("Percent Change:", formatPct(percentChange))
 
             console.log("---------------------")
             console.log("PART 2...")
 
-
-
-
-
+            // Display on page
+    document.getElementById("display-symbol").textContent = symbol
+    document.getElementById("display-earliest").textContent = `${earliest.timestamp} (${formatUSD(earliest.adjusted_close)})`
+    document.getElementById("display-latest").textContent = `${latest.timestamp} (${formatUSD(latest.adjusted_close)})`
+    document.getElementById("display-pct-change").textContent = formatPct(percentChange)
 
             }).catch(function(error) {
                 console.error("ERROR:", error)

@@ -52,16 +52,43 @@
         console.log("---------------------")
         console.log("PART 1...")
 
+        // Part 1: define the function
+    function calculateCircleArea(radius) {
+        return Math.PI * radius * radius;
+    }
 
+    // Call the function with radius = 9
+    let radius = 9;
+    let area = calculateCircleArea(radius);
 
-
+    // Log to the console
+    console.log("Radius:", radius);
+    console.log("Area:", area);
 
         console.log("---------------------")
         console.log("PART 2...")
 
+// Part 2: handle button click
+document.getElementById("calculate").addEventListener("click", function() {
+        // Get radius from input
+        let inputRadius = parseFloat(document.getElementById("input-radius").value);
+        if (isNaN(inputRadius)) {
+            alert("Please enter a valid number for radius.");
+            return;
+        }
 
+        if (inputRadius < 0) {
+        alert("Radius cannot be negative.");
+        return;
+    }
+        // Calculate area
+        let resultArea = calculateCircleArea(inputRadius);
 
+        // Display area in span element
+        // Display area in span element with label
+document.getElementById("display-area").textContent = "Area: " + resultArea.toFixed(2);
 
+    });
 
     </script>
 </body>

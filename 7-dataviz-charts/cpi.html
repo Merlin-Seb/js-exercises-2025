@@ -75,21 +75,56 @@
 
             console.log("---------------------")
             console.log("PART 1...")
+// Part 1
+const metaData = parsedResponse['Meta Data'];
+    const data = parsedResponse['Data'];
+    const dataEntries = Object.entries(data);
 
+    // A) Dataset name
+    const datasetName = metaData['Name'];
+    console.log("Dataset Name:", datasetName);
 
+    // B) Time frequency
+    const frequency = metaData['Interval'];
+    console.log("Time Frequency:", frequency);
 
+    // C) Number of datapoints
+    const numDataPoints = dataEntries.length;
+    console.log("Number of Datapoints:", numDataPoints);
 
+    // D) Time range
+    const dates = dataEntries.map(entry => entry[0]);
+    const sortedDates = dates.sort();
+    const earliestDate = sortedDates[0];
+    const latestDate = sortedDates[sortedDates.length - 1];
+    console.log("Time Range:", earliestDate, "to", latestDate);
 
 
 
             console.log("---------------------")
             console.log("PART 2...")
 
+// Prepare data for chart
+const cpiValues = dataEntries.map(entry => ({
+        date: entry[0],
+        value: parseFloat(entry[1]['value'])
+    })).sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    const trace = {
+        x: cpiValues.map(d => d.date),
+        y: cpiValues.map(d => d.value),
+        type: 'scatter',
+        mode: 'lines',
+        name: 'CPI'
+    };
 
+    const layout = {
+        title: 'Consumer Price Index Over Time',
+        xaxis: { title: 'Date' },
+        yaxis: { title: 'CPI Value' }
+    };
 
-
-
+    Plotly.newPlot('dataviz-container', [trace], layout);
 
         }).catch(function(error) {
             console.error("ERROR:", error)

@@ -83,20 +83,58 @@
             console.log("DATA:", data)
             // observe the rates are strings so we will need to convert them to numbers to do math and chart them
 
+            // Convert rate strings to numbers and timestamps to Date objects
+    data.forEach(d => {
+        d.value = parseFloat(d.value);
+        d.timestamp = new Date(d.timestamp);
+    });
+
             console.log("---------------------")
             console.log("PART 1...")
 
+// A. Number of datapoints
+console.log("Number of datapoints:", data.length);
 
+// B. Time range
+const dates = data.map(d => d.timestamp);
+const minDate = d3.min(dates);
+const maxDate = d3.max(dates);
+console.log("Time range:", minDate.toISOString().slice(0,10), "to", maxDate.toISOString().slice(0,10));
 
+// C. Average, min, max over all data
+const rates = data.map(d => d.value);
+const avgRate = d3.mean(rates);
+const minRate = d3.min(rates);
+const maxRate = d3.max(rates);
+console.log("Overall Average:", avgRate.toFixed(2), "Min:", minRate, "Max:", maxRate);
 
+// D. Average, min, max over past 12 months
+const recentRates = rates.slice(0,12);
+const recentAvg = d3.mean(recentRates);
+const recentMin = d3.min(recentRates);
+const recentMax = d3.max(recentRates);
+console.log("Past 12 months Average:", recentAvg.toFixed(2), "Min:", recentMin, "Max:", recentMax);
 
 
             console.log("---------------------")
             console.log("PART 2...")
 
+            // Prepare data for Plotly
+const trace = {
+    x: data.map(d => d.timestamp),
+    y: data.map(d => d.value),
+    type: 'scatter',
+    mode: 'lines+markers',
+    name: 'Unemployment Rate'
+};
 
+const layout = {
+    title: 'Unemployment Rate Over Time',
+    xaxis: { title: 'Date' },
+    yaxis: { title: 'Unemployment Rate (%)' }
+};
 
-
+Plotly.newPlot('dataviz-container', [trace], layout);
 
 
         }).catch(function(error) {
