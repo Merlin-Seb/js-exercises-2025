@@ -86,21 +86,55 @@
 
             console.log("---------------------")
             console.log("PART 1...")
+            const data = parsedResponse.data;
+    const metadata = parsedResponse.meta;
 
+    // A. Name of dataset
+    console.log("Dataset Name:", metadata.name);
 
+    // B. Time frequency
+    console.log("Time Frequency:", metadata.interval);
 
+    // C. Number of datapoints
+    console.log("Number of Datapoints:", data.length);
 
+    // D. Time range
+    const dates = data.map(d => d.date);
+    const earliest = dates[dates.length - 1];
+    const latest = dates[0];
+    console.log("Time Range:", earliest, "to", latest);
 
+    // E. Average, min, max (all data)
+    const values = data.map(d => parseFloat(d.value));
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    console.log("All Data - Average:", avg, "Min:", min, "Max:", max);
 
+    // F. Average, min, max (past ten years, first 12 points)
+    const lastTenYears = values.slice(0, 12);
+    const avg10 = lastTenYears.reduce((a, b) => a + b, 0) / lastTenYears.length;
+    const min10 = Math.min(...lastTenYears);
+    const max10 = Math.max(...lastTenYears);
+    console.log("Last 10 Years - Average:", avg10, "Min:", min10, "Max:", max10);
 
             console.log("---------------------")
             console.log("PART 2...")
+            const trace = {
+        x: dates.reverse(), // reverse for chronological order
+        y: values.reverse(),
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Inflation Rate'
+    };
 
+    const layout = {
+        title: 'US Inflation Rate Over Time',
+        xaxis: { title: 'Year' },
+        yaxis: { title: 'Inflation Rate (%)' }
+    };
 
-
-
-
-
+    Plotly.newPlot('dataviz-container', [trace], layout);
         }).catch(function(error) {
             console.error("ERROR:", error)
         })
