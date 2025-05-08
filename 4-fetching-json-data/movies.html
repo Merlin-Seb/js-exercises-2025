@@ -75,69 +75,75 @@
 
     <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
     <script type="text/javascript">
-
-        var requestUrl = "https://raw.githubusercontent.com/prof-rossetti/internet-technologies/refs/heads/main/data/hp-movies.json"
-
-        fetch(requestUrl).then(response => response.json())
-            .then(function(data){
-                console.log("DATA", data)
-
-
-                console.log("---------------------")
-                console.log("PART 1...")
-// Part 1A: Fetch done → we have `data`
-
-            // Part 1B: Number of movies
+        var requestUrl = "https://raw.githubusercontent.com/prof-rossetti/internet-technologies/main/data/hp-movies.json";
+      
+        fetch(requestUrl)
+          .then(response => response.json())
+          .then(function(data) {
+            console.log("DATA", data);
+      
+            console.log("---------------------");
+            console.log("PART 1...");
+      
             console.log("Number of movies:", data.length);
-
-            // Part 1C: Loop through movies, display title and year
-            data.forEach(movie => {
-                console.log(`${movie.title} (${movie.year})`);
+      
+            data.forEach(function(movie) {
+              console.log(movie.Title, movie.Year);
             });
-
-            // Part 1D: Find movie with highest rating
-            const highestRated = data.reduce((max, movie) => movie.rating > max.rating ? movie : max, data[0]);
-            console.log(`Highest rated movie: ${highestRated.title} (${highestRated.rating}/10)`);
-
-
-                console.log("---------------------")
-                console.log("PART 2...")
-                const selectMovie = document.getElementById("select-movie");
-            const displayTitle = document.getElementById("display-title");
-            const displayYear = document.getElementById("display-year");
-            const displayRating = document.getElementById("display-rating");
-            const imageContainer = document.getElementById("image-container");
-
-            // Part 2A: Populate dropdown
-            data.forEach(movie => {
-                const option = document.createElement("option");
-                option.value = movie.id;
-                option.textContent = movie.title;
-                selectMovie.appendChild(option);
+      
+            // Sort the movies by rating in descending order
+            var sortedMovies = data.slice().sort(function(a, b) {
+              return b.Rating - a.Rating;
             });
-
-            // Part 2B: Update movie info function
+      
+            var highestRated = sortedMovies[0];
+            console.log("HIGHEST RATED:", highestRated.Title, highestRated.Rating);
+      
+            console.log("---------------------");
+            console.log("PART 2...");
+      
+            // Dynamically create a new <option> element for each movie
+            var selectMovie = document.getElementById("select-movie");
+      
+            data.forEach(function(movie) {
+              var option = document.createElement("option");
+              option.value = movie.Id;
+              option.textContent = movie.Title;
+              selectMovie.appendChild(option);
+            });
+      
+            // Update movie info function
             function updateMovieInfo() {
-                const selectedId = selectMovie.value;
-                const selectedMovie = data.find(movie => movie.id === selectedId);
-                if (selectedMovie) {
-                    displayTitle.textContent = selectedMovie.title;
-                    displayYear.textContent = selectedMovie.year;
-                    displayRating.textContent = selectedMovie.rating;
-                    imageContainer.innerHTML = `<img src="${selectedMovie.posterUrl}" alt="${selectedMovie.title}" width="200">`;
-                } else {
-                    displayTitle.textContent = "TODO";
-                    displayYear.textContent = "TODO";
-                    displayRating.textContent = "X";
-                    imageContainer.innerHTML = "";
-                }
+              var selectedMovieId = selectMovie.value;
+              var selectedMovie = data.find(function(movie) {
+                return movie.Id === selectedMovieId;
+              });
+      
+              if (!selectedMovie) {
+                console.warn("Selected movie not found.");
+                return;
+              }
+      
+              document.getElementById("display-title").textContent = selectedMovie.Title;
+              document.getElementById("display-year").textContent = selectedMovie.Year;
+              document.getElementById("display-rating").textContent = selectedMovie.Rating;
+      
+              // Display the image of the movie poster
+              var imageContainer = document.getElementById("image-container");
+              imageContainer.innerHTML = ""; // Clear previous images
+              var img = document.createElement("img");
+              img.src = selectedMovie["Thumbnail Image URL"];
+              img.alt = selectedMovie.Title;
+              img.width = 200;
+              imageContainer.appendChild(img);
             }
-
-            // Part 2C: Add event listener
+      
+            // Add an event listener to the dropdown
             selectMovie.addEventListener("change", updateMovieInfo);
-
-        })
-        .catch(err => console.log(err));
-    </script>
+          })
+          .catch(err => console.log(err));
+      </script>
+      
+    
 </body>
 </html>
